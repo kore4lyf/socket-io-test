@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOCKET.IO TEST</title>
+  <style>
+    body {
+      padding: 0px;
+      margin: 0px;
+      scroll-behavior: smooth;
+      display: grid;
+      height: 100vh;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .header {
+      padding-left: 1rem;
+      top: 0px;
+      background-color: White;
+      border-bottom: 1px solid lightgray;
+      color: navy;
+      font-family: serif;
+      padding-block: .5rem;
+    }
+
+    .chat{
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      overflow-y: scroll;
+
+      &::-webkit-scrollbar{
+        width: 0px;
+      }
+    }
+
+    .msg {
+      font-family: sans-serif;
+      word-break: break-all;
+      word-wrap: break-word;
+      display: block;
+      padding: 1rem;
+      margin-bottom: .5rem;
+      border: 1px solid lightgray;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      border-bottom-right-radius: 15px;
+      width: fit-content;
+      max-width: 35%;
+    }
+
+    .text {
+      flex: 1;
+      padding: 1rem;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+      border: 1px solid gray;
+      outline: none;
+    }
+
+    .send {
+      padding: 1rem;
+      background-color: navy;
+      color: white;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      border: 0px;
+    }
+
+    .floatRight {
+      display: flex;
+      width: 100%;
+      justify-content: flex-end;
+
+      & .msg {
+        border-bottom-right-radius: 0px;
+        border-bottom-left-radius: 15px;
+        border-top-left-radius: 15px;
+        background-color: lightgoldenrodyellow;
+      }
+    }
+
+    .noListStyle {
+      list-style-type: none;
+    }
+
+    form {
+      padding-block: 10px;
+      background-color: white;
+      width: 100%;
+      bottom: 0px;
+      border-top: 1px solid lightgray;
+    }
+
+    .form {
+      padding-inline: 1rem;
+      display: flex;
+      width: 95%;
+      margin-inline: auto;
+    }
+
+  </style>
+</head>
+<body>
+  <h1 class="header">Socket.io Test</h1>
+  <ul class="chat"></ul>
+
+  <form>
+    <div class="form">
+      <input class="text" type="text" placeholder="message">
+      <button type="submit" class="send">Send</button>
+    </div>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module">
+    const socket = io()
+
+    socket.on("connect", () => console.log("Connected to the Client."))
+
+    // setTimeout(() => socket.disconnect(), 5000)
+
+    /* socket.on("disconnect", () => {
+      console.log("Disconnect from client")
+    }) */
+
+    socket.on("message", (msg) => {
+      addNewMessage(msg, "server")
+    })
+
+    const sendMessage = () => {
+      const textElem = document.querySelector(".text")
+
+      if(textElem.value) {
+        socket.emit("message", textElem.value)
+        addNewMessage(textElem.value, "client")
+        textElem.value = ""
+      }
+    }
+    
+    const sendBtn = document.querySelector(".send")
+    sendBtn.addEventListener("click", (e) => {
+      e.preventDefault()
+      sendMessage()
+    })
+    
+    const addNewMessage = (msg, node) => {
+      const msgId = (new Date()).getTime().toString()
+      const container = document.createElement("li")
+      container.className = node === "client" ? " floatRight noListStyle" : "noListStyle"
+      const msgElement = document.createElement("p")
+      msgElement.className = "msg"
+      msgElement.innerText = msg
+
+      container.appendChild(msgElement)
+      document.querySelector(".chat").appendChild(container)
+      console.log(node.toUpperCase(), ": ", msg)
+
+      // scroll to the latest message
+      setTimeout(() => {
+        const messages = document.querySelectorAll(".chat li")
+        const lastMsg = messages[messages.length - 1]
+        lastMsg.scrollIntoView()
+      }, 200)
+    }
+    
+
+  </script>
+</body>
+</html>
