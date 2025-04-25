@@ -23,8 +23,8 @@ io.on("connection", (client) => {
   console.log("New Client Connected")
 
   client.on("message", (message) => {
-    console.log("Message recieved: ", message)
-    io.emit("message", message)
+    console.log("Message received: ", message)
+    client.broadcast.emit("message", message)
   })
 
   client.on("disconnect", () => {

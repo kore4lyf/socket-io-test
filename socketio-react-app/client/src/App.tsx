@@ -6,12 +6,12 @@ const socket = io("http://localhost:3000")
 
 const App = () => {
 
-  const [messages, setMessage] = useState<string[]>([])
+  const [messages, setMessage] = useState<string[][]>([])
   const [messageInput, setMessageInput] = useState("")
 
   useEffect(() => {
     socket.on("message", (message: string) => {
-      setMessage([...messages, message])
+      setMessage([...messages, ["server", message]])
     })
 
     return () => {
@@ -19,26 +19,38 @@ const App = () => {
     }
   }, [messages])
 
-  const sendMessage = () => {
+  const sendMessage = (e: SubmitEvent) => {
+    e.preventDefault()
     if (messageInput.trim() !== "") {
       socket.emit("message", messageInput)
+      setMessage([...messages, ["client", messageInput]])
       setMessageInput("")
+
     }
   }
 
   return (
     <main>
-      <div>
-        <h1>CHATAPP</h1>
-        <input type="text" value={messageInput} placeholder="Type your message..." onChange={(e) => setMessageInput(e.target.value)}/>
-        <button onClick={sendMessage}>Send</button>
-      </div>
+      <header>
+        <h1>CHAT APP</h1>
+      </header>
 
-      <section>
+      <ul className="messages">
         {messages.map((message, index) => (
-          <div key={index}> {message} </div>
+          <li className={message[0] == "server" ? "server" : "client"} key={index}> 
+            <p>{message[1]}</p> 
+          </li>
         ) )}
-      </section>
+      </ul>
+
+      <form>
+        <input type="text" value={messageInput} placeholder="Type your message..." onChange={(e) => setMessageInput(e.target.value)}/>
+        <button type="submit" onClick={sendMessage}>Send</button>
+      </form>
+
+      <footer>
+        <p>Made with <span className="love">❤</span> by <a href="https://www.github.com/kore4lyf">KoRe</a></p>
+      </footer>
     </main>
   )
 }
