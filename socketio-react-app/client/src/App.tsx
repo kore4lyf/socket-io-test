@@ -14,18 +14,23 @@ const App = () => {
       setMessage([...messages, ["server", message]])
     })
 
+    setTimeout(() =>{
+      const chatList = document.querySelectorAll("li")
+      const lastChatItem = chatList[chatList.length - 1]
+      lastChatItem.scrollIntoView();
+    } , 200)
+
     return () => {
       socket.off("message")
     }
   }, [messages])
 
-  const sendMessage = (e: SubmitEvent) => {
+  const sendMessage = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     if (messageInput.trim() !== "") {
       socket.emit("message", messageInput)
       setMessage([...messages, ["client", messageInput]])
       setMessageInput("")
-
     }
   }
 
@@ -43,13 +48,13 @@ const App = () => {
         ) )}
       </ul>
 
-      <form>
+      <form className="chatForm">
         <input type="text" value={messageInput} placeholder="Type your message..." onChange={(e) => setMessageInput(e.target.value)}/>
         <button type="submit" onClick={sendMessage}>Send</button>
       </form>
 
       <footer>
-        <p>Made with <span className="love">❤</span> by <a href="https://www.github.com/kore4lyf">KoRe</a></p>
+        <p>Made with <span className="love">❤</span> by <a title="KoRe's Github profile" href="https://www.github.com/kore4lyf">KoRe</a></p>
       </footer>
     </main>
   )

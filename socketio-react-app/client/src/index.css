@@ -50,6 +50,7 @@ li {
   border-bottom-left-radius: 0px;
   margin: 10px;
   width: fit-content;
+  max-width: 80%;
   
   &.client {
     align-self: flex-end;
@@ -68,11 +69,11 @@ li {
   }
 }
 
-form {
+form.chatForm {
   display: flex;
   width: 95%;
   border: 1px solid lightgray;
-  border-radius: 10px;
+  border-radius: 5px;
   margin-inline: auto;
   box-shadow: 2px 5px 10px rgb(235, 235, 235);
 
