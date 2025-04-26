@@ -6,6 +6,8 @@ import Messages from '../components/Messages';
 import Header from '../components/Header';
 import { Imessage } from '../utils/types';
 import { state } from '../utils/context';
+import Modal from '../components/Modal';
+import UserNameForm from '../components/UserNameForm';
 
 
 
@@ -46,13 +48,16 @@ const App = () => {
   return (
     <state.Provider value={{
       username: username,
-      messages: messages
+      messages: messages,
     }}>
       <main>
         <Header/>
-        <Messages messages={messages} />
+        <Messages />
         <ChatForm sendMessage={ sendMessage } />
         <Footer />
+        <Modal>
+          <UserNameForm/>
+        </Modal>
       </main>
     </state.Provider>
   )

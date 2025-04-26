@@ -3,8 +3,9 @@ import OnlineStatus from './OnlineStatus';
 import { state } from "../utils/context";
 
 const Header = () => {
-  const username = useContext(state).username
-  
+  const username = useContext(state)?.username
+  console.log("username: ", username)
+
   return (
     <header>
       <h1>CHAT APP</h1>

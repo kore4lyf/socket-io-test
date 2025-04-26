@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Message from './Message';
+import { state } from "../utils/context";
 
-const Messages = ({ messages }: { messages: string[][]}) => {
+const Messages = () => {
+  const messages = useContext(state).messages
+
   return (
     <ul className="messages">
         {messages.map((message, index) => (
