@@ -3,18 +3,16 @@ import { createServer } from "node:http"
 import { Server } from "socket.io"
 import cors from "cors"
 
-
 // Configurations
 const app = express()
 const server = createServer(app)
 const io = new Server(server, {
+  connectionStateRecovery: {},
   cors: {
     origin: "http://localhost:5173",
     methods: ["GET", "POST"]
   },
-  connectionStateRecovery: {}
 })
-
 
 // middleware
 app.use(cors())
